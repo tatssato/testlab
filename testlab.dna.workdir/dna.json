@@ -1,0 +1,13 @@
+{
+    "name": "testlab",
+    "uuid": "",
+    "properties": null,
+    "zomes": {
+      "zomeone": {
+        "wasm_path": "../../holochain/target/wasm32-unknown-unknown/release/zomeone.wasm"
+      },
+      "zometwo": {
+        "wasm_path": "../../holochain/target/wasm32-unknown-unknown/release/zometwo.wasm"
+      }
+    }
+  }
