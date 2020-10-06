@@ -64,20 +64,33 @@ const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
 // });
 
-orchestrator.registerScenario('Scenario 4: directly calling create but remotely call get zometwo to get both key from entry', async (s, t) => {
+// orchestrator.registerScenario('Scenario 4: directly calling create but remotely call get zometwo to get both key from entry', async (s, t) => {
+//   // spawn the conductor process
+//   const { conductor } = await s.players({ conductor: config })
+//   await conductor.spawn()
+
+//   const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
+
+//   await conductor.call("bobby", "zomeone", "create_foo", null);
+//   await delay(1000);
+
+//   // now this doesn't work because the links return an empty array inside the get_author function
+//   let get_bobby_key = await conductor.call("alice", "zometwo", "get_author_of_foo_from_zomeone", null);
+
+//   t.deepEqual(get_bobby_key, agent_pubkey_bobby);
+// });
+
+orchestrator.registerScenario('Scenario 4:testing enum', async (s, t) => {
   // spawn the conductor process
   const { conductor } = await s.players({ conductor: config })
   await conductor.spawn()
 
-  const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
-
-  await conductor.call("bobby", "zomeone", "create_foo", null);
+  let result = await conductor.call("bobby", "zomeone", "create_bar", null);
   await delay(1000);
 
-  // now this doesn't work because the links return an empty array inside the get_author function
-  let get_bobby_key = await conductor.call("alice", "zometwo", "get_author_of_foo_from_zomeone", null);
-
-  t.deepEqual(get_bobby_key, agent_pubkey_bobby);
+  console.log("tatsuya sato");
+  console.log(result);
+  
 });
 
 

@@ -1,16 +1,40 @@
 use hdk3::prelude::*;
 
+#[derive(Deserialize, Serialize, SerializedBytes)]
+#[derive(Clone)]
+enum Bat {
+    Foo,
+    Bar(String),
+    Baz
+}
+
 #[hdk_entry(id = "foo", visibility = "public" )]
 #[derive(Clone)]
 struct Foo (String);
+
+#[hdk_entry(id = "bar", visibility = "public" )]
+#[derive(Clone)]
+struct Bar {
+    foo: bool
+}
 
 #[derive(Deserialize, Serialize, SerializedBytes)]
 struct StringWrapper(String);
 
 entry_defs![
     Path::entry_def(),
-    Foo::entry_def()
+    Foo::entry_def(),
+    Bar::entry_def()
 ];
+
+#[hdk_extern]
+fn create_bar(_: ()) -> ExternResult<Bar> {
+    let bar = Bar {
+        foo: false
+    };
+    create_entry!(bar.clone())?;
+    Ok(bar)
+}
 
 #[hdk_extern]
 fn create_foo(_: ()) -> ExternResult<Foo> {
