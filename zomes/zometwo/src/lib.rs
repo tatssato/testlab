@@ -26,7 +26,7 @@ fn get_links_from_path_from_zomeone(_: ()) -> ExternResult<Links> {
 #[hdk_extern]
 fn get_links_from_foo_from_zomeone(_: ()) -> ExternResult<Links> {
     let my_agent_pubkey = agent_info!()?.agent_latest_pubkey;
-    let function_name = zome::FunctionName("get_author_of_foo".to_owned());
+    let function_name = zome::FunctionName("get_links_from_foo".to_owned());
     let payload: SerializedBytes = StringWrapper("foo".to_owned()).try_into()?;
 
     match call_remote!(my_agent_pubkey, "zomeone".into(), function_name, None, payload)? {

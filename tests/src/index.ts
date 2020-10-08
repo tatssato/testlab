@@ -64,21 +64,21 @@ const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
 // });
 
-orchestrator.registerScenario('Scenario 4: bobby create and alice get links from path remotely from zometwo', async (s, t) => {
-  // spawn the conductor process
-  const { conductor } = await s.players({ conductor: config })
-  await conductor.spawn()
+// orchestrator.registerScenario('Scenario 4: bobby create and alice get links from path remotely from zometwo', async (s, t) => {
+//   // spawn the conductor process
+//   const { conductor } = await s.players({ conductor: config })
+//   await conductor.spawn()
 
-  const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
+//   const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
 
-  await conductor.call("bobby", "zomeone", "create_foo_and_link_to_path", null);
-  await delay(100000);
+//   await conductor.call("bobby", "zomeone", "create_foo_and_link_to_path", null);
+//   await delay(100000);
 
-  // now this doesn't work because the links return an empty array inside the get_author function
-  let links = await conductor.call("alice", "zometwo", "get_links_from_path_from_zomeone", null);
+//   // now this doesn't work because the links return an empty array inside the get_author function
+//   let links = await conductor.call("alice", "zometwo", "get_links_from_path_from_zomeone", null);
 
-  t.deepEqual(links.length, 1);
-});
+//   t.deepEqual(links.length, 1);
+// });
 
 orchestrator.registerScenario('Scenario 5: bobby creates and alice get links from foo from zomeone', async (s, t) => {
   // spawn the conductor process
@@ -88,7 +88,7 @@ orchestrator.registerScenario('Scenario 5: bobby creates and alice get links fro
   const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
 
   await conductor.call("bobby", "zomeone", "create_and_link_foo", null);
-  await delay(100000);
+  await delay(10000);
 
   // now this doesn't work because the links return an empty array inside the get_author function
   let links = await conductor.call("alice", "zometwo", "get_links_from_foo_from_zomeone", null);

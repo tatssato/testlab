@@ -36,6 +36,21 @@ fn create_bar(_: ()) -> ExternResult<Bar> {
     Ok(bar)
 }
 
+// #[hdk_extern]
+// fn create_cap_grant(_: ()) -> ExternResult<()> {
+//     let mut functions: GrantedFunctions = HashSet::new();
+//     functions.insert((zome_info!()?.zome_name, "get_links_from_foo".into()));
+//     create_cap_grant!(
+//         CapGrantEntry {
+//             tag: "".into(),
+//             // empty access converts to unrestricted
+//             access: ().into(),
+//             functions,
+//         }
+//     )?;
+//     Ok(())
+// }
+
 #[hdk_extern]
 fn create_foo_and_link_to_path(_: ()) -> ExternResult<Foo> {
     let foo = Foo("foo".to_owned());
@@ -74,7 +89,7 @@ fn create_and_link_foo(_: ()) -> ExternResult<()> {
 }
 
 #[hdk_extern]
-fn get_author_of_foo(input: StringWrapper) -> ExternResult<Links> {
+fn get_links_from_foo(input: StringWrapper) -> ExternResult<Links> {
     debug!("payload for get_author_of_foo {:#?}", input.0.clone())?;
     let base = Foo(input.0.to_owned());
     debug!("base for get_author_of_foo {:#?}", base.clone())?;
@@ -84,3 +99,25 @@ fn get_author_of_foo(input: StringWrapper) -> ExternResult<Links> {
     debug!("links for get_author_of_foo {:#?}", links.clone())?;
     Ok(links)
 }
+
+
+
+// #[hdk_extern]
+// fn caller(input: StringWrapper) -> ExternResult<Links> {
+//     let my_agent_pubkey = agent_info!()?.agent_latest_pubkey;
+//     let function_name = zome::FunctionName("get_links_from_foo".to_owned());
+//     let payload: SerializedBytes = StringWrapper("foo".to_owned()).try_into()?;
+
+//     match call_remote!(my_agent_pubkey, "zomeone".into(), function_name, None, payload)? {
+//         ZomeCallResponse::Ok(output) => {
+//             let sb = output.into_inner();
+//             let links: Links = sb.try_into()?;
+//             Ok(links)
+//         },
+//         ZomeCallResponse::Unauthorized => {
+//             Err(HdkError::Wasm(WasmError::Zome(
+//                 "this agent has no proper authorization".to_owned()
+//             )))
+//         },
+//     }
+// }
