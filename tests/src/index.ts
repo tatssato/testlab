@@ -13,84 +13,87 @@ const config = Config.gen({
 const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
 
-// orchestrator.registerScenario('Scenario 1: directly calling create and get from zomeone to get own key from entry', async (s, t) => {
+// orchestrator.registerScenario('Scenario 1: alice create and alice direclt get links from zomeone', async (s, t) => {
 //   // spawn the conductor process
 //   const { conductor } = await s.players({ conductor: config });
 //   await conductor.spawn();
 
 //   const [dna_hash_1, agent_pubkey_alice] = conductor.cellId('alice');
 
-//   await conductor.call("alice", "zomeone", "create_foo", null);
+//   await conductor.call("alice", "zomeone", "create_foo_and_link_to_path", null);
 //   await delay(1000);
 
 //   // Works with no problem
-//   let get_alice_key = await conductor.call("alice", "zomeone", "get_author_of_foo", "bar");
+//   let links = await conductor.call("alice", "zomeone", "get_links_from_path", "bar");
 //   console.log("tatsuya sato 1");
-//   console.log(get_alice_key)
+//   console.log(links)
 
-//   t.deepEqual(get_alice_key, agent_pubkey_alice);
+//   t.deepEqual(links.length, 1);
 // });
 
-// orchestrator.registerScenario('Scenario 2: directly calling create and get from zomeone to get bobby key from entry', async (s, t) => {
+// orchestrator.registerScenario('Scenario 2: bobby create and alice get links from zomeone', async (s, t) => {
 //   // spawn the conductor process
 //   const { conductor } = await s.players({ conductor: config })
 //   await conductor.spawn()
 
 //   const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
 
-//   await conductor.call("bobby", "zomeone", "create_foo", null);
+//   await conductor.call("bobby", "zomeone", "create_foo_and_link_to_path", null);
 //   await delay(1000);
 
 //   // works with no problem too
-//   let get_bobby_key = await conductor.call("alice", "zomeone", "get_author_of_foo", "bar");
+//   let links = await conductor.call("alice", "zomeone", "get_links_from_path", "bar");
 
-//   t.deepEqual(get_bobby_key, agent_pubkey_bobby);
+//   t.deepEqual(links.length, 1);
 // });
 
-// orchestrator.registerScenario('Scenario 3: directly calling create but remotely call get zometwo to get own key from entry', async (s, t) => {
+// orchestrator.registerScenario('Scenario 3: alice create and alice remotely get links from zometwo', async (s, t) => {
 //   // spawn the conductor process
 //   const { conductor } = await s.players({ conductor: config })
 //   await conductor.spawn()
 
 //   const [dna_hash_1, agent_pubkey_alice] = conductor.cellId('alice');
 
-//   await conductor.call("alice", "zomeone", "create_foo", null);
+//   await conductor.call("alice", "zomeone", "create_foo_and_link_to_path", null);
 //   await delay(1000);
 
 //   // this works with no problem as well
-//   let get_alice_key = await conductor.call("alice", "zometwo", "get_author_of_foo_from_zomeone", null);
+//   let links = await conductor.call("alice", "zometwo", "get_links_from_path_from_zomeone", null);
 
-//   t.deepEqual(get_alice_key, agent_pubkey_alice);
+//   t.deepEqual(links.length, 1);
 
 // });
 
-// orchestrator.registerScenario('Scenario 4: directly calling create but remotely call get zometwo to get both key from entry', async (s, t) => {
-//   // spawn the conductor process
-//   const { conductor } = await s.players({ conductor: config })
-//   await conductor.spawn()
-
-//   const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
-
-//   await conductor.call("bobby", "zomeone", "create_foo", null);
-//   await delay(1000);
-
-//   // now this doesn't work because the links return an empty array inside the get_author function
-//   let get_bobby_key = await conductor.call("alice", "zometwo", "get_author_of_foo_from_zomeone", null);
-
-//   t.deepEqual(get_bobby_key, agent_pubkey_bobby);
-// });
-
-orchestrator.registerScenario('Scenario 4:testing enum', async (s, t) => {
+orchestrator.registerScenario('Scenario 4: bobby create and alice get links from path remotely from zometwo', async (s, t) => {
   // spawn the conductor process
   const { conductor } = await s.players({ conductor: config })
   await conductor.spawn()
 
-  let result = await conductor.call("bobby", "zomeone", "create_bar", null);
-  await delay(1000);
+  const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
 
-  console.log("tatsuya sato");
-  console.log(result);
-  
+  await conductor.call("bobby", "zomeone", "create_foo_and_link_to_path", null);
+  await delay(100000);
+
+  // now this doesn't work because the links return an empty array inside the get_author function
+  let links = await conductor.call("alice", "zometwo", "get_links_from_path_from_zomeone", null);
+
+  t.deepEqual(links.length, 1);
+});
+
+orchestrator.registerScenario('Scenario 5: bobby creates and alice get links from foo from zomeone', async (s, t) => {
+  // spawn the conductor process
+  const { conductor } = await s.players({ conductor: config })
+  await conductor.spawn()
+
+  const [dna_hash_2, agent_pubkey_bobby] = conductor.cellId('bobby');
+
+  await conductor.call("bobby", "zomeone", "create_and_link_foo", null);
+  await delay(100000);
+
+  // now this doesn't work because the links return an empty array inside the get_author function
+  let links = await conductor.call("alice", "zometwo", "get_links_from_foo_from_zomeone", null);
+
+  t.deepEqual(links.length, 1);
 });
 
 
