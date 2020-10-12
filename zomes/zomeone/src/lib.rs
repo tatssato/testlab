@@ -8,15 +8,27 @@ enum Bat {
     Baz
 }
 
+// used for testing the links in call_remote
 #[hdk_entry(id = "foo", visibility = "public" )]
 #[derive(Clone, Debug)]
 struct Foo (String);
 
+// used for testing enum in entries
 #[hdk_entry(id = "bar", visibility = "public" )]
 #[derive(Clone)]
 struct Bar {
     foo: bool
 }
+
+// used for testing linking private entries
+#[hdk_entry(id = "foofoo", visibility = "public" )]
+#[derive(Clone, Debug)]
+struct FooFoo (String);
+
+// used for testing linking private entries
+#[hdk_entry(id = "barbar", visibility = "public" )]
+#[derive(Clone, Debug)]
+struct BarBar (String);
 
 #[derive(Deserialize, Serialize, SerializedBytes)]
 struct StringWrapper(String);
@@ -24,7 +36,9 @@ struct StringWrapper(String);
 entry_defs![
     Path::entry_def(),
     Foo::entry_def(),
-    Bar::entry_def()
+    Bar::entry_def(),
+    FooFoo::entry_def(),
+    BarBar::entry_def()
 ];
 
 #[hdk_extern]
@@ -36,20 +50,20 @@ fn create_bar(_: ()) -> ExternResult<Bar> {
     Ok(bar)
 }
 
-// #[hdk_extern]
-// fn create_cap_grant(_: ()) -> ExternResult<()> {
-//     let mut functions: GrantedFunctions = HashSet::new();
-//     functions.insert((zome_info!()?.zome_name, "get_links_from_foo".into()));
-//     create_cap_grant!(
-//         CapGrantEntry {
-//             tag: "".into(),
-//             // empty access converts to unrestricted
-//             access: ().into(),
-//             functions,
-//         }
-//     )?;
-//     Ok(())
-// }
+#[hdk_extern]
+fn create_cap_grant(_: ()) -> ExternResult<()> {
+    let mut functions: GrantedFunctions = HashSet::new();
+    functions.insert((zome_info!()?.zome_name, "get_links_from_foo".into()));
+    create_cap_grant!(
+        CapGrantEntry {
+            tag: "".into(),
+            // empty access converts to unrestricted
+            access: ().into(),
+            functions,
+        }
+    )?;
+    Ok(())
+}
 
 #[hdk_extern]
 fn create_foo_and_link_to_path(_: ()) -> ExternResult<Foo> {
@@ -89,9 +103,8 @@ fn create_and_link_foo(_: ()) -> ExternResult<()> {
 }
 
 #[hdk_extern]
-fn get_links_from_foo(input: StringWrapper) -> ExternResult<Links> {
-    debug!("payload for get_author_of_foo {:#?}", input.0.clone())?;
-    let base = Foo(input.0.to_owned());
+fn get_links_from_foo(_: ()) -> ExternResult<Links> {
+    let base = Foo("foo".to_owned());
     debug!("base for get_author_of_foo {:#?}", base.clone())?;
     let base_hash = hash_entry!(&base)?;
     debug!("base_hash for get_author_of_foo {:#?}", base_hash.clone())?;
@@ -100,24 +113,50 @@ fn get_links_from_foo(input: StringWrapper) -> ExternResult<Links> {
     Ok(links)
 }
 
+#[hdk_extern]
+fn caller(agent: AgentPubKey) -> ExternResult<Links> {
+    let function_name = zome::FunctionName("get_links_from_foo".to_owned());
 
+    match call_remote!(
+        agent, 
+        "zomeone".into(),
+        function_name, 
+        None,
+        ().try_into()?
+    )? {
+        ZomeCallResponse::Ok(output) => {
+            let sb = output.into_inner();
+            let links: Links = sb.try_into()?;
+            Ok(links)
+        },
+        ZomeCallResponse::Unauthorized => {
+            Err(HdkError::Wasm(WasmError::Zome(
+                "this agent has no proper authorization".to_owned()
+            )))
+        },
+    }
+}
 
-// #[hdk_extern]
-// fn caller(input: StringWrapper) -> ExternResult<Links> {
-//     let my_agent_pubkey = agent_info!()?.agent_latest_pubkey;
-//     let function_name = zome::FunctionName("get_links_from_foo".to_owned());
-//     let payload: SerializedBytes = StringWrapper("foo".to_owned()).try_into()?;
+#[hdk_extern]
+fn create_foofoo_and_link(_: ()) -> ExternResult<FooFoo> {
+    let foofoo = FooFoo("foofoo".to_owned());
+    let barbar = BarBar("barbar".to_owned());
+    let base_hash = hash_entry!(&foofoo)?;
+    let target_hash = hash_entry!(&barbar)?;
+    create_entry!(&foofoo)?;
+    create_entry!(&barbar)?;
+    create_link!(
+        base_hash,
+        target_hash,
+        LinkTag::new("foofoo->barbar")
+    )?;
+    Ok(foofoo)
+}
 
-//     match call_remote!(my_agent_pubkey, "zomeone".into(), function_name, None, payload)? {
-//         ZomeCallResponse::Ok(output) => {
-//             let sb = output.into_inner();
-//             let links: Links = sb.try_into()?;
-//             Ok(links)
-//         },
-//         ZomeCallResponse::Unauthorized => {
-//             Err(HdkError::Wasm(WasmError::Zome(
-//                 "this agent has no proper authorization".to_owned()
-//             )))
-//         },
-//     }
-// }
+#[hdk_extern]
+fn get_links_from_foofoo(_: ()) -> ExternResult<Links> {
+    let foofoo = FooFoo("foofoo".to_owned()); 
+    let base_hash = hash_entry!(&foofoo)?;
+    let links = get_links!(base_hash)?;
+    Ok(links)
+}
