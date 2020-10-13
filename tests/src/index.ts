@@ -1,5 +1,4 @@
-import { Orchestrator } from '@holochain/tryorama';
-import { Config } from '@holochain/tryorama'
+import { Orchestrator, Config } from '@holochain/tryorama';
 
 const orchestrator = new Orchestrator();
 
