@@ -14,7 +14,7 @@ jobs:
             dna-util -c testlab.dna.workdir/
       - run:
           name: test-holochain
-          working_directory: ~/tests
+          working_directory: ~/project/tests
           command: |
             NODE_ENV=development npm install
             npm test
