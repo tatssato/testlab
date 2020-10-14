@@ -67,7 +67,7 @@ dependencies = [
 [[package]]
 name = "fixt"
 version = "0.0.1"
-source = "git+https://github.com/holochain/holochain?rev=4714fbd#4714fbddc48f1f9987c9f574b8d06510ea58ab16"
+source = "git+https://github.com/holochain/holochain?rev=65f768c#65f768c563996df933593b0b1e608dd1cde95235"
 dependencies = [
  "holochain_serialized_bytes",
  "paste 0.1.12",
@@ -100,7 +100,7 @@ dependencies = [
 [[package]]
 name = "hdk3"
 version = "0.0.1"
-source = "git+https://github.com/holochain/holochain?rev=4714fbd#4714fbddc48f1f9987c9f574b8d06510ea58ab16"
+source = "git+https://github.com/holochain/holochain?rev=65f768c#65f768c563996df933593b0b1e608dd1cde95235"
 dependencies = [
  "hdk3_derive",
  "holo_hash",
@@ -114,7 +114,7 @@ dependencies = [
 [[package]]
 name = "hdk3_derive"
 version = "0.0.1"
-source = "git+https://github.com/holochain/holochain?rev=4714fbd#4714fbddc48f1f9987c9f574b8d06510ea58ab16"
+source = "git+https://github.com/holochain/holochain?rev=65f768c#65f768c563996df933593b0b1e608dd1cde95235"
 dependencies = [
  "holochain_zome_types",
  "paste 1.0.0",
@@ -135,7 +135,7 @@ dependencies = [
 [[package]]
 name = "holo_hash"
 version = "0.0.1"
-source = "git+https://github.com/holochain/holochain?rev=4714fbd#4714fbddc48f1f9987c9f574b8d06510ea58ab16"
+source = "git+https://github.com/holochain/holochain?rev=65f768c#65f768c563996df933593b0b1e608dd1cde95235"
 dependencies = [
  "base64",
  "blake2b_simd",
@@ -196,7 +196,7 @@ dependencies = [
 [[package]]
 name = "holochain_zome_types"
 version = "0.0.1"
-source = "git+https://github.com/holochain/holochain?rev=4714fbd#4714fbddc48f1f9987c9f574b8d06510ea58ab16"
+source = "git+https://github.com/holochain/holochain?rev=65f768c#65f768c563996df933593b0b1e608dd1cde95235"
 dependencies = [
  "fixt",
  "holo_hash",
