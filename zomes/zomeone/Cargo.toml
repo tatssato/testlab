@@ -11,5 +11,5 @@ crate-type = [ "cdylib", "rlib" ]
 [dependencies]
 derive_more = "0"
 serde = "1"
-
-hdk3 = {git = "https://github.com/holochain/holochain", rev = "65f768c", package = "hdk3"}
+hdk3 = { git = "https://github.com/holochain/holochain.git", rev="3675b5" }
+thiserror = "1.0.22"

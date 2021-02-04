@@ -4,10 +4,7 @@
     "properties": null,
     "zomes": {
       "zomeone": {
-        "wasm_path": "../target/wasm32-unknown-unknown/release/zomeone.wasm"
-      },
-      "zometwo": {
-        "wasm_path": "../target/wasm32-unknown-unknown/release/zometwo.wasm"
+        "wasm_path": "../../holochain/target/wasm32-unknown-unknown/release/zomeone.wasm"
       }
     }
   }
