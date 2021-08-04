@@ -1,12 +1,23 @@
-name: learn-github-actions
-on: [push]
+name: CI
+on:
+  push:
+    branches:
+      - main
+      - actions-testing
 jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
+
+      name: checkout the code
       - uses: actions/checkout@v2
+
+      
+      name: setup the node
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
+      
+      name: install bats and check version
       - run: npm install -g bats
       - run: bats -v
