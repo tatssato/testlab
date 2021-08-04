@@ -20,12 +20,12 @@ jobs:
     - name: build-holochain
       run: |
         cd $GITHUB_WORKSPACE
-        nix-shell . --run "cd zome && CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown"
-        nix-shell . --run "cd zome && hc dna pack workdir/dna"
-        nix-shell . --run "cd zome && hc app pack workdir/happ"
+        nix-shell . --run "CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown"
+        nix-shell . --run "hc dna pack workdir/dna"
+        nix-shell . --run "hc app pack workdir/happ"
 
     - name: test-holochain
       run: |
         cd $GITHUB_WORKSPACE
-        nix-shell . --run "cd zome/tests && npm install"
-        nix-shell . --run "cd zome/tests && npm test" 
+        nix-shell . --run "tests && npm install"
+        nix-shell . --run "tests && npm test" 
