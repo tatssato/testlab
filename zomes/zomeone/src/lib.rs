@@ -1,20 +1,16 @@
-use hdk3::prelude::*;
+use hdk::prelude::*;
 
 // used for testing the links in call_remote
-#[hdk_entry(id = "foo", visibility = "public" )]
-#[derive(Clone, Debug)]
-struct Foo (String);
+#[hdk_entry(id = "foo", visibility = "public")]
+#[derive(Clone)]
+struct Foo(String);
 
 // used for testing linking private entries
-#[hdk_entry(id = "foofoo", visibility = "private" )]
-#[derive(Clone, Debug)]
-struct FooFoo (String);
+#[hdk_entry(id = "foofoo", visibility = "private")]
+#[derive(Clone)]
+struct FooFoo(String);
 
-entry_defs![
-    Path::entry_def(),
-    Foo::entry_def(),
-    FooFoo::entry_def()
-];
+entry_defs![Path::entry_def(), Foo::entry_def(), FooFoo::entry_def()];
 
 #[hdk_extern]
 fn emit_signal_20(_: ()) -> ExternResult<()> {
@@ -25,18 +21,11 @@ fn emit_signal_20(_: ()) -> ExternResult<()> {
     Ok(())
 }
 
-// #[hdk_extern]
-// fn create_and_link_foo(_: ()) -> ExternResult<()> {
-//     let base = Foo("foo".to_string());
-//     let target = FooFoo("foofoo".to_string());
-//     let base_hash = hash_entry(&base)?;
-//     let target_hash = hash_entry(&target)?;
-//     let tag = LinkTag::new("foos");
-//     create_entry(&base)?;
-//     create_entry(&target)?;
-//     create_link(base_hash, target_hash, tag)?;
-//     Ok(())
-// }
+#[hdk_extern]
+fn create_and_link_foo(_: ()) -> ExternResult<bool> {
+    create_entry(&Foo("foo".to_string()))?;
+    Ok(true)
+}
 
 // #[hdk_extern]
 // fn get_foo_foo(_: ()) -> ExternResult<FooFoo> {
@@ -45,7 +34,7 @@ fn emit_signal_20(_: ()) -> ExternResult<()> {
 //     let links = get_links(base_hash, Some(tag))?.into_inner();
 //     let get_option = GetOptions::latest();
 //     let target = get(links[0].target.clone(), get_option)?.unwrap().into_inner();
-//     let foofoo: FooFoo = target.1.to_app_option()?.unwrap(); 
+//     let foofoo: FooFoo = target.1.to_app_option()?.unwrap();
 //     Ok(foofoo)
 // }
 
@@ -69,6 +58,6 @@ fn emit_signal_20(_: ()) -> ExternResult<()> {
 //     let links = get_links(base_hash, Some(tag))?.into_inner();
 //     let get_option = GetOptions::latest();
 //     let target = get(links[0].target.clone(), get_option)?.unwrap().into_inner();
-//     let foo: Foo = target.1.to_app_option()?.unwrap(); 
+//     let foo: Foo = target.1.to_app_option()?.unwrap();
 //     Ok(foo)
 // }
