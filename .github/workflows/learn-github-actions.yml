@@ -14,8 +14,8 @@ jobs:
 
       
     - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+      with:
+        node-version: '14'
       
     - name: install bats and check version
       run: npm install -g bats
